@@ -2,6 +2,7 @@ import HeaderContent from "@/components/HeaderContent";
 import BannerSection from "@/components/BannerSection";
 import DiscoverOurMostSection from "@/components/DiscoverOurMostSection";
 import YTHWelcomeSection from "@/components/YTHWelcomeSection";
+import ATripadvisorTopSection from "@/components/ATripadvisorTopSection";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         <DiscoverOurMostSection />
       </div>
       <YTHWelcomeSection />
+      <ATripadvisorTopSection />
 
       {/* Gallery Section Placeholder */}
       <section id="gallery" className="py-20 bg-gray-50">
