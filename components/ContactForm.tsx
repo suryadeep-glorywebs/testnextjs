@@ -1,18 +1,19 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Send, CheckCircle } from 'lucide-react';
+import { Send, CheckCircle, Calendar, Users, Camera, Mountain } from 'lucide-react';
 
 interface FormData {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  company: string;
-  subject: string;
+  tourType: string;
+  groupSize: string;
+  preferredDate: string;
   message: string;
   budget: string;
-  timeline: string;
+  specialRequests: string;
 }
 
 export default function ContactForm() {
@@ -21,16 +22,25 @@ export default function ContactForm() {
     lastName: '',
     email: '',
     phone: '',
-    company: '',
-    subject: '',
+    tourType: '',
+    groupSize: '',
+    preferredDate: '',
     message: '',
     budget: '',
-    timeline: ''
+    specialRequests: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errors, setErrors] = useState<Partial<FormData>>({});
+
+  const tourTypes = [
+    { value: 'monument-valley-tour', label: 'Monument Valley Tour', icon: Mountain },
+    { value: 'hunts-mesa-tour', label: 'Hunts Mesa Tour', icon: Mountain },
+    { value: 'photography-tour', label: 'Photography Tour', icon: Camera },
+    { value: 'cultural-experience', label: 'Cultural Experience', icon: Users },
+    { value: 'custom-tour', label: 'Custom Tour', icon: Calendar },
+  ];
 
   const validateForm = (): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -49,8 +59,12 @@ export default function ContactForm() {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    if (!formData.subject.trim()) {
-      newErrors.subject = 'Subject is required';
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    }
+
+    if (!formData.tourType) {
+      newErrors.tourType = 'Please select a tour type';
     }
 
     if (!formData.message.trim()) {
@@ -102,13 +116,18 @@ export default function ContactForm() {
 
   if (isSubmitted) {
     return (
-      <div className="bg-white p-8 rounded-2xl shadow-lg">
+      <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
         <div className="text-center">
-          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Thank You!</h3>
-          <p className="text-gray-600 mb-6">
-            Your message has been sent successfully. We'll get back to you within 24 hours.
+          <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
+          <h3 className="text-3xl font-bold text-gray-900 mb-4">Thank You!</h3>
+          <p className="text-gray-600 mb-6 text-lg">
+            Your message has been sent successfully. We'll get back to you within 2 hours during business hours.
           </p>
+          <div className="bg-[#fffaf3] p-4 rounded-lg mb-6">
+            <p className="text-[#22577a] font-semibold">
+              Need immediate assistance? Call us at (435) 220-5727
+            </p>
+          </div>
           <button
             onClick={() => {
               setIsSubmitted(false);
@@ -117,14 +136,15 @@ export default function ContactForm() {
                 lastName: '',
                 email: '',
                 phone: '',
-                company: '',
-                subject: '',
+                tourType: '',
+                groupSize: '',
+                preferredDate: '',
                 message: '',
                 budget: '',
-                timeline: ''
+                specialRequests: ''
               });
             }}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+            className="bg-[#fd0408] text-white px-8 py-3 rounded-lg hover:bg-[#e00306] transition-colors duration-200 font-medium"
           >
             Send Another Message
           </button>
@@ -134,14 +154,17 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="bg-white p-8 rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-bold text-gray-900 mb-8">Send Us a Message</h2>
+    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+      <div className="mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Book Your Adventure</h2>
+        <p className="text-gray-600">Fill out the form below and we'll help you plan the perfect Monument Valley experience.</p>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700 mb-2">
               First Name *
             </label>
             <input
@@ -150,8 +173,8 @@ export default function ContactForm() {
               name="firstName"
               value={formData.firstName}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
-                errors.firstName ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 ${
+                errors.firstName ? 'border-red-500' : 'border-gray-200 hover:border-gray-300'
               }`}
               placeholder="Enter your first name"
             />
@@ -161,7 +184,7 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="lastName" className="block text-sm font-semibold text-gray-700 mb-2">
               Last Name *
             </label>
             <input
@@ -170,8 +193,8 @@ export default function ContactForm() {
               name="lastName"
               value={formData.lastName}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
-                errors.lastName ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 ${
+                errors.lastName ? 'border-red-500' : 'border-gray-200 hover:border-gray-300'
               }`}
               placeholder="Enter your last name"
             />
@@ -184,7 +207,7 @@ export default function ContactForm() {
         {/* Contact Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
               Email Address *
             </label>
             <input
@@ -193,8 +216,8 @@ export default function ContactForm() {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 ${
+                errors.email ? 'border-red-500' : 'border-gray-200 hover:border-gray-300'
               }`}
               placeholder="your.email@example.com"
             />
@@ -204,8 +227,8 @@ export default function ContactForm() {
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-              Phone Number
+            <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+              Phone Number *
             </label>
             <input
               type="tel"
@@ -213,107 +236,132 @@ export default function ContactForm() {
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+              className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 ${
+                errors.phone ? 'border-red-500' : 'border-gray-200 hover:border-gray-300'
+              }`}
               placeholder="(555) 123-4567"
             />
+            {errors.phone && (
+              <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+            )}
           </div>
         </div>
 
-        {/* Company Field */}
+        {/* Tour Type Selection */}
         <div>
-          <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-            Company/Organization
+          <label className="block text-sm font-semibold text-gray-700 mb-3">
+            Tour Type *
           </label>
-          <input
-            type="text"
-            id="company"
-            name="company"
-            value={formData.company}
-            onChange={handleInputChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
-            placeholder="Your company name"
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {tourTypes.map((tour) => {
+              const IconComponent = tour.icon;
+              return (
+                <label
+                  key={tour.value}
+                  className={`relative flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-[#fd0408] ${
+                    formData.tourType === tour.value
+                      ? 'border-[#fd0408] bg-[#fffaf3]'
+                      : 'border-gray-200'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="tourType"
+                    value={tour.value}
+                    checked={formData.tourType === tour.value}
+                    onChange={handleInputChange}
+                    className="sr-only"
+                  />
+                  <IconComponent className={`w-5 h-5 mr-3 ${
+                    formData.tourType === tour.value ? 'text-[#fd0408]' : 'text-gray-400'
+                  }`} />
+                  <span className={`text-sm font-medium ${
+                    formData.tourType === tour.value ? 'text-[#fd0408]' : 'text-gray-700'
+                  }`}>
+                    {tour.label}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          {errors.tourType && (
+            <p className="mt-1 text-sm text-red-600">{errors.tourType}</p>
+          )}
         </div>
 
-        {/* Project Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Tour Details */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
-              Project Budget
+            <label htmlFor="groupSize" className="block text-sm font-semibold text-gray-700 mb-2">
+              Group Size
+            </label>
+            <select
+              id="groupSize"
+              name="groupSize"
+              value={formData.groupSize}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 hover:border-gray-300"
+            >
+              <option value="">Select group size</option>
+              <option value="1">1 person</option>
+              <option value="2">2 people</option>
+              <option value="3-4">3-4 people</option>
+              <option value="5-8">5-8 people</option>
+              <option value="9-15">9-15 people</option>
+              <option value="16+">16+ people</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="preferredDate" className="block text-sm font-semibold text-gray-700 mb-2">
+              Preferred Date
+            </label>
+            <input
+              type="date"
+              id="preferredDate"
+              name="preferredDate"
+              value={formData.preferredDate}
+              onChange={handleInputChange}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 hover:border-gray-300"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="budget" className="block text-sm font-semibold text-gray-700 mb-2">
+              Budget Range
             </label>
             <select
               id="budget"
               name="budget"
               value={formData.budget}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 hover:border-gray-300"
             >
               <option value="">Select budget range</option>
-              <option value="under-5k">Under $5,000</option>
-              <option value="5k-15k">$5,000 - $15,000</option>
-              <option value="15k-50k">$15,000 - $50,000</option>
-              <option value="50k-100k">$50,000 - $100,000</option>
-              <option value="over-100k">Over $100,000</option>
+              <option value="under-200">Under $200</option>
+              <option value="200-500">$200 - $500</option>
+              <option value="500-1000">$500 - $1,000</option>
+              <option value="1000-2000">$1,000 - $2,000</option>
+              <option value="over-2000">Over $2,000</option>
             </select>
           </div>
-
-          <div>
-            <label htmlFor="timeline" className="block text-sm font-medium text-gray-700 mb-2">
-              Project Timeline
-            </label>
-            <select
-              id="timeline"
-              name="timeline"
-              value={formData.timeline}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200"
-            >
-              <option value="">Select timeline</option>
-              <option value="asap">ASAP</option>
-              <option value="1-month">Within 1 month</option>
-              <option value="2-3-months">2-3 months</option>
-              <option value="3-6-months">3-6 months</option>
-              <option value="6-months-plus">6+ months</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Subject Field */}
-        <div>
-          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-            Subject *
-          </label>
-          <input
-            type="text"
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleInputChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
-              errors.subject ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="What's this about?"
-          />
-          {errors.subject && (
-            <p className="mt-1 text-sm text-red-600">{errors.subject}</p>
-          )}
         </div>
 
         {/* Message Field */}
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-            Message *
+          <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+            Tell us about your ideal tour *
           </label>
           <textarea
             id="message"
             name="message"
-            rows={6}
+            rows={5}
             value={formData.message}
             onChange={handleInputChange}
-            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 resize-vertical ${
-              errors.message ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 resize-vertical ${
+              errors.message ? 'border-red-500' : 'border-gray-200 hover:border-gray-300'
             }`}
-            placeholder="Tell us about your project, questions, or how we can help..."
+            placeholder="What are you most excited to see and experience in Monument Valley? Any special interests or requirements?"
           />
           {errors.message && (
             <p className="mt-1 text-sm text-red-600">{errors.message}</p>
@@ -323,31 +371,51 @@ export default function ContactForm() {
           </p>
         </div>
 
+        {/* Special Requests */}
+        <div>
+          <label htmlFor="specialRequests" className="block text-sm font-semibold text-gray-700 mb-2">
+            Special Requests or Accessibility Needs
+          </label>
+          <textarea
+            id="specialRequests"
+            name="specialRequests"
+            rows={3}
+            value={formData.specialRequests}
+            onChange={handleInputChange}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#fd0408] focus:border-transparent transition-colors duration-200 resize-vertical hover:border-gray-300"
+            placeholder="Any dietary restrictions, mobility considerations, or special celebrations we should know about?"
+          />
+        </div>
+
         {/* Submit Button */}
         <div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-[#fd0408] text-white py-4 px-6 rounded-lg hover:bg-[#e00306] focus:ring-2 focus:ring-[#fd0408] focus:ring-offset-2 transition-all duration-200 font-semibold text-lg flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
           >
             {isSubmitting ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Sending...</span>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                <span>Sending Your Request...</span>
               </>
             ) : (
               <>
                 <Send className="w-5 h-5" />
-                <span>Send Message</span>
+                <span>Send My Tour Request</span>
               </>
             )}
           </button>
         </div>
       </form>
 
-      <div className="mt-6 text-center">
-        <p className="text-sm text-gray-500">
-          By submitting this form, you agree to our privacy policy and terms of service.
+      <div className="mt-6 p-4 bg-[#fffaf3] rounded-lg border border-[#fd0408]/20">
+        <p className="text-sm text-gray-600 text-center">
+          <strong>Need immediate assistance?</strong> Call us at{' '}
+          <a href="tel:4352205727" className="text-[#fd0408] font-semibold hover:underline">
+            (435) 220-5727
+          </a>{' '}
+          for instant booking and answers to your questions.
         </p>
       </div>
     </div>
