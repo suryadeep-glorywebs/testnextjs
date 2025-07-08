@@ -64,16 +64,7 @@ export default function ATripadvisorTopSection() {
   }, []);
 
   // Auto-play with loop
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => {
-        const maxIndex = testimonials.length - toursPerPage;
-        return prev >= maxIndex ? 0 : prev + 1; // Loop back to start
-      });
-    }, 5000); // Change slide every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [toursPerPage]);
+  // Autoplay disabled as requested
 
   const nextSlide = () => {
     setCurrentIndex((prev) => {
@@ -128,13 +119,13 @@ export default function ATripadvisorTopSection() {
           </Button>
 
           {/* Testimonial Cards */}
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch">
             {getVisibleTours().map((testimonial, index) => (
               <Card 
                 key={`${currentIndex}-${index}`} 
-                className="h-[350px] md:h-[400px] border-stone-200 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white"
+                className="border-stone-200 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white h-full flex flex-col"
               >
-                <CardContent className="p-6 h-full flex flex-col">
+                <CardContent className="p-6 flex-1 flex flex-col">
                   {/* Header with TripAdvisor branding */}
                   <div className="flex items-start mb-4">
                     <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
@@ -153,14 +144,14 @@ export default function ATripadvisorTopSection() {
                   </div>
 
                   {/* Review Text */}
-                  <div className="flex-1 mb-4">
+                  <div className="flex-1 mb-6">
                     <p className="text-gray-600 text-sm md:text-base leading-relaxed italic">
                       {testimonial.review}
                     </p>
                   </div>
 
                   {/* Author */}
-                  <div className="mt-auto">
+                  <div className="mt-auto pt-2 border-t border-gray-100">
                     <p className="text-stone-950 text-sm font-medium">
                       {testimonial.author}
                     </p>
